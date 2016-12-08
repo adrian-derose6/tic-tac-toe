@@ -1,6 +1,6 @@
 module TicTacToe
   class Player
-    attr_accessor :name, :sym
+    attr_accessor :name, :sym 
     def initialize(name)
       @name = name
     end

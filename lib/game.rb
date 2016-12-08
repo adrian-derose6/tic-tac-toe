@@ -26,7 +26,7 @@ module TicTacToe
       play
     end
 
-    def play
+    def play #main flow of game
       pick_first_turn
       allocate_symbols
       take_turns
@@ -34,10 +34,9 @@ module TicTacToe
 
     private
 
-    def pick_first_turn
+    def pick_first_turn #a player is randomly chosen to go first
       random = Random.new
       first_turn = random.rand(0..1)
-      first_player = nil
       case first_turn
       when 0
         @first_turn = @player1.name
@@ -47,12 +46,12 @@ module TicTacToe
       puts "#{@first_turn} goes first!\n\n\n\n"
     end
 
-    def allocate_symbols
+    def allocate_symbols #allocates the symbols to the players
       @player1.sym = "X"
       @player2.sym = "O"
     end
 
-    def take_turns
+    def take_turns #take turns(loops) between the players depending on who started first and the current turn number
       until draw? || @winner != ""
         if @first_turn == @player1.name
           (@current_turn.even?) ? turn(@player2) : turn(@player1)
@@ -60,10 +59,10 @@ module TicTacToe
           (@current_turn.even?) ? turn(@player1) : turn(@player2)
         end
       end
-      puts "Game was a draw!" if draw?
+      puts "Game was a draw!" if draw? #checks if game is a draw after loop ends
     end
 
-    def turn(player)
+    def turn(player) #one turn for a player
       puts "Turn #{@current_turn}:"
       puts "---------------------------\n\n\n"
       @board.generate_board
@@ -72,7 +71,7 @@ module TicTacToe
       @current_turn += 1
     end
 
-    def get_valid_position(player)
+    def get_valid_position(player) #gets valid input from player.
       input = 0
       until valid_input?(input)
         print "#{player.name}, enter the cell number that you would like to use (1-9): "
@@ -91,17 +90,17 @@ module TicTacToe
       end
     end
 
-    def draw?
+    def draw? #checks if the game is a draw
       (@current_turn == @board.spaces.length) && (@winner == "")
     end
 
-    def check_winner(player)
+    def check_winner(player) #if a player is a winner, the @winner instance var is set to that player
       @@winning_positions.each do |triplet|
         @winner = player.name if triplet.all? { |a| @board.spaces[a] == player.sym }
       end
     end
 
-    def valid_input?(input)
+    def valid_input?(input) #checks if input meets conditions
       return input > 0 && input < 10 && !@board.space_taken?(input - 1)
     end
   end

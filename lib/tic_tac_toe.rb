@@ -16,7 +16,7 @@ module TicTacToe
       game_loop
     end
 
-    def welcome_screen
+    def welcome_screen #greets players and asks for their names
       puts "|| Welcome to Tic Tac Toe! ||"
       puts "||-------------------------||\n\n\n"
       print "Enter Player 1's name: "
@@ -27,18 +27,18 @@ module TicTacToe
       puts " "
     end
 
-    def game_loop
+    def game_loop #loops between prompting for new game and running the game.
       game_start
       play_again
     end
 
-    def game_start
+    def game_start #initiates a new game
       board = Board.new
       player1, player2 = Player.new(@name1), Player.new(@name2)
       game = Game.new(player1, player2, board)
     end
 
-    def play_again
+    def play_again #asks user if they want to play again
       input = nil
       until input == "Y" or input == "N"
         puts "Would you like to play again? (Y/N): "
