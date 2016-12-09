@@ -54,4 +54,4 @@ module TicTacToe
   end
 end
 
-TicTacToeRunner.new
+game = TicTacToe::TicTacToeRunner.new

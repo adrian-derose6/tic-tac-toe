@@ -15,9 +15,9 @@ module TicTacToe
       @player1 = player1
       @player2 = player2
       @board = board
-      @current_turn = 1
-      @first_turn = ""
-      @winner = ""
+      @current_turn_player = nil
+      @turn_count = 1
+      @winner = nil
 
       #executes game flow
       play
@@ -32,43 +32,41 @@ module TicTacToe
     private
 
     def pick_first_turn #a player is randomly chosen to go first
-      random = Random.new
-      first_turn = random.rand(0..1)
-      case first_turn
-      when 0
-        @first_turn = @player1.name
-      when 1
-        @first_turn = @player2.name
-      end
-      puts "#{@first_turn} goes first!\n\n\n\n"
+      @current_turn_player = [@player1, @player2].sample
+      puts "#{@current_turn_player} goes first!\n\n\n\n"
     end
 
-    def allocate_symbols #allocates the symbols to the players
+    def allocate_symbols
       @player1.sym = "X"
       @player2.sym = "O"
     end
 
-    def take_turns #take turns(loops) between the players depending on who started first and the current turn number
-      until draw? || @winner != ""
-        if @first_turn == @player1.name
-          (@current_turn.even?) ? turn(@player2) : turn(@player1)
-        elsif @first_turn == @player2.name
-          (@current_turn.even?) ? turn(@player1) : turn(@player2)
-        end
+    def take_turns
+      until game_end?
+        turn(@current_turn_player)
+        next_turn
       end
-      puts "Game was a draw!" if draw? #checks if game is a draw after loop ends
+      puts "Game was a draw!" if draw?
+    end
+
+    def next_turn
+      @current_turn_player = @current_turn_player == @player1 ? @player2 : @player1
+      @turn_count += 1
+    end
+
+    def game_end?
+      draw? || !@winner.nil?
     end
 
     def turn(player) #one turn for a player
-      puts "Turn #{@current_turn}:"
+      puts "Turn #{@turn_count}:"
       puts "---------------------------\n\n\n"
       @board.generate_board
       @board.add_symbol(get_valid_position(player), player.sym)
       announce_win(player)
-      @current_turn += 1
     end
 
-    def get_valid_position(player) #gets valid input from player.
+    def get_valid_position(player)
       input = 0
       until valid_input?(input)
         print "#{player.name}, enter the cell number that you would like to use (1-9): "
@@ -76,6 +74,7 @@ module TicTacToe
         print "Invalid input! " unless valid_input?(input)
         puts "Number is not in range 1-9" unless (input > 0 && input < 10)
         puts "Cell taken." if @board.space_taken?(input - 1)
+        puts "\n\n"
       end
       input - 1
     end
@@ -87,8 +86,8 @@ module TicTacToe
       end
     end
 
-    def draw? #checks if the game is a draw
-      (@current_turn == @board.spaces.length) && (@winner == "")
+    def draw?
+      (@turn_count == @board.spaces.length) && (@winner.nil?)
     end
 
     def check_winner(player) #if a player is a winner, the @winner instance var is set to that player
@@ -97,8 +96,8 @@ module TicTacToe
       end
     end
 
-    def valid_input?(input) #checks if input meets conditions
-      return input > 0 && input < 10 && !@board.space_taken?(input - 1)
+    def valid_input?(input)
+      input > 0 && input < 10 && !@board.space_taken?(input - 1)
     end
   end
 end
