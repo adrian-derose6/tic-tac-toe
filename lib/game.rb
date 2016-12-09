@@ -12,12 +12,9 @@ module TicTacToe
     ]
 
     def initialize(player1, player2, board)
-      ##initialize external objects utilized by this class.
       @player1 = player1
       @player2 = player2
       @board = board
-
-      ##initialize data for current game run
       @current_turn = 1
       @first_turn = ""
       @winner = ""

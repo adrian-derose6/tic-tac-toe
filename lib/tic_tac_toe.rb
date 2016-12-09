@@ -28,8 +28,10 @@ module TicTacToe
     end
 
     def game_loop #loops between prompting for new game and running the game.
-      game_start
-      play_again
+      loop do
+        game_start
+        break unless play_again?
+      end
     end
 
     def game_start #initiates a new game
@@ -38,17 +40,15 @@ module TicTacToe
       game = Game.new(player1, player2, board)
     end
 
-    def play_again #asks user if they want to play again
-      input = nil
-      until input == "Y" or input == "N"
-        puts "Would you like to play again? (Y/N): "
+    def play_again?
+      loop do
+        print "Would you like to play again? (Y/N): "
         input = gets.chomp.upcase
-      end
-      case input
-      when "Y"
-        game_start
-      when "N"
-        puts "Thank you for playing!"
+        if input == "Y"
+          return true
+        elsif input == "N"
+          return false
+        end
       end
     end
   end
